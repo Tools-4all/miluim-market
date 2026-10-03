@@ -36,7 +36,7 @@ function App() {
         </Routes>
       </main>
       <footer className="footer">
-        מילואימרקט · פרויקט לימודים ב-React ו-Firebase
+        מילואימרקט · ציוד יד שנייה למילואימניקים
       </footer>
     </div>
   )
