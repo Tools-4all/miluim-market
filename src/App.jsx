@@ -1,121 +1,44 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+// App - הקומפוננטה הראשית. קובעת איזה עמוד מוצג לפי הכתובת.
+import { Routes, Route } from 'react-router-dom'
+import { useAuth } from './context/AuthContext.jsx'
+import Navbar from './components/Navbar.jsx'
+import Home from './pages/Home.jsx'
+import ListingForm from './pages/ListingForm.jsx'
+import ListingDetails from './pages/ListingDetails.jsx'
+import Profile from './pages/Profile.jsx'
+import Favorites from './pages/Favorites.jsx'
+import Chats from './pages/Chats.jsx'
+import Chat from './pages/Chat.jsx'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { loading } = useAuth()
+
+  // עד ש-Firebase יודע אם יש משתמש מחובר - לא מציגים עמודים,
+  // אחרת לרגע היה נראה כאילו המשתמש לא מחובר
+  if (loading) return <p className="loading">טוען...</p>
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    <div className="app">
+      <Navbar />
+      <main className="container">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          {/* אותו טופס משמש לפרסום ולעריכה */}
+          <Route path="/new" element={<ListingForm />} />
+          <Route path="/edit/:id" element={<ListingForm />} />
+          {/* :id הוא פרמטר - החלק בכתובת שמשתנה לכל מודעה */}
+          <Route path="/listing/:id" element={<ListingDetails />} />
+          <Route path="/user/:uid" element={<Profile />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/chats" element={<Chats />} />
+          <Route path="/chat/:chatId" element={<Chat />} />
+          <Route path="*" element={<p className="empty">העמוד לא נמצא.</p>} />
+        </Routes>
+      </main>
+      <footer className="footer">
+        מילואימרקט · פרויקט לימודים ב-React ו-Firebase
+      </footer>
+    </div>
   )
 }
 
